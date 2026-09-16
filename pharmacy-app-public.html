@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dawa Sahayak — pharmacy stock assistant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#E7ECE6; --panel:#FCFDFB; --panel2:#F1F5F0; --ink:#101F19; --ink2:#4C5E56;
+  --line:#CCD7CD; --line2:#DFE7DF;
+  --green:#14624A; --greenS:#D8E9DE; --amber:#A8701A; --amberS:#F2E3C2;
+  --rust:#9D3527; --rustS:#EFD6D1; --shadow:rgba(16,31,25,.10);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0D1411; --panel:#151E1A; --panel2:#1B2622; --ink:#E2EAE5; --ink2:#93A79D;
+    --line:#26332D; --line2:#1F2A25;
+    --green:#4FB38C; --greenS:#173026; --amber:#D4A24A; --amberS:#332714;
+    --rust:#D9705E; --rustS:#331B17; --shadow:rgba(0,0,0,.4);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0D1411; --panel:#151E1A; --panel2:#1B2622; --ink:#E2EAE5; --ink2:#93A79D;
+  --line:#26332D; --line2:#1F2A25;
+  --green:#4FB38C; --greenS:#173026; --amber:#D4A24A; --amberS:#332714;
+  --rust:#D9705E; --rustS:#331B17; --shadow:rgba(0,0,0,.4);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:"IBM Plex Sans","Noto Sans Devanagari",-apple-system,BlinkMacSystemFont,sans-serif;
+  font-size:15.5px; line-height:1.55; font-variant-numeric:tabular-nums;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:720px;margin:0 auto;padding:18px 16px 70px}
+h1{font-family:Archivo,"Noto Sans Devanagari",sans-serif;font-size:25px;font-weight:700;margin:0;letter-spacing:-.01em}
+h2{font-family:Archivo,"Noto Sans Devanagari",sans-serif;font-size:17px;font-weight:600;margin:0 0 2px}
+p{margin:.4em 0}
+.sub{color:var(--ink2);font-size:13.5px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:15px;margin-bottom:14px;box-shadow:0 1px 2px var(--shadow)}
+header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--panel)}
+.seg button{font:inherit;font-size:13px;padding:6px 11px;background:transparent;color:var(--ink2);border:0;cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--green);color:var(--panel)}
+button{font-family:inherit}
+.btn{font:inherit;font-size:14.5px;font-weight:600;padding:10px 15px;border-radius:6px;border:1px solid var(--green);
+     background:var(--green);color:var(--panel);cursor:pointer;min-height:44px}
+.btn.ghost{background:transparent;color:var(--green)}
+.btn:disabled{opacity:.5;cursor:default}
+.btn.wide{width:100%}
+:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+textarea,input,select{font:inherit;font-size:15px;width:100%;padding:9px 10px;border:1px solid var(--line);
+  border-radius:6px;background:var(--panel2);color:var(--ink)}
+textarea{min-height:110px;resize:vertical;font-family:ui-monospace,"SF Mono",Consolas,monospace;font-size:13.5px}
+label{font-size:13px;color:var(--ink2);display:block;margin-bottom:3px}
+.grid3{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:11px 0;border-bottom:1px solid var(--line2)}
+.row:last-child{border-bottom:0}
+.row .nm{font-weight:600;font-size:15px}
+.row .meta{font-size:12.5px;color:var(--ink2)}
+.qty{font-family:Archivo;font-weight:700;font-size:16px;text-align:right;white-space:nowrap}
+.qty small{display:block;font-family:"IBM Plex Sans";font-weight:500;font-size:11.5px;color:var(--ink2)}
+.pill{display:inline-block;font-size:11px;font-weight:600;padding:2px 7px;border-radius:4px;margin-right:6px}
+.pill.urgent{background:var(--rustS);color:var(--rust)}
+.pill.soon{background:var(--panel2);color:var(--ink2)}
+.pill.hold{background:var(--greenS);color:var(--green)}
+.pill.disc{background:var(--amberS);color:var(--amber)}
+.tot{display:flex;justify-content:space-between;font-weight:600;padding-top:11px;margin-top:4px;border-top:1px solid var(--line)}
+.ai{background:var(--panel2);border:1px solid var(--line2);border-radius:6px;padding:12px;margin-top:11px;white-space:pre-wrap;font-size:14.5px}
+.ai:empty{display:none}
+.muted{color:var(--ink2);font-size:13px}
+.chip{display:inline-block;font-size:12.5px;padding:6px 10px;border:1px solid var(--line);border-radius:14px;margin:4px 5px 0 0;cursor:pointer;background:var(--panel)}
+details summary{cursor:pointer;font-size:14px;font-weight:600;color:var(--green)}
+.edit{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.edit .full{grid-column:1/-1}
+.err{color:var(--rust);font-size:13.5px}
+.fmt{background:var(--panel2);border:1px solid var(--line2);border-radius:6px;padding:9px 10px;font-family:ui-monospace,"SF Mono",Consolas,monospace;font-size:12px;margin-top:8px;overflow-x:auto;white-space:pre;color:var(--ink2)}
+footer{font-size:12px;color:var(--ink2);text-align:center;margin-top:22px}
+.badge{display:inline-block;font-size:11px;font-weight:600;padding:3px 8px;border-radius:12px;background:var(--greenS);color:var(--green);margin-left:8px;vertical-align:middle}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div>
+    <h1 id="appName">Dawa Sahayak<span class="badge" id="badgeFree"></span></h1>
+    <div class="sub" id="tagline"></div>
+  </div>
+  <div class="seg" role="group" aria-label="Language">
+    <button data-lang="en" aria-pressed="true">EN</button>
+    <button data-lang="mr" aria-pressed="false">मराठी</button>
+    <button data-lang="hi" aria-pressed="false">हिंदी</button>
+  </div>
+</header>
+
+<div class="card">
+  <h2 id="t_order"></h2>
+  <div class="sub" id="s_order"></div>
+  <div id="orderList"></div>
+  <div class="tot"><span id="t_total"></span><span id="orderTotal"></span></div>
+  <button class="btn wide ghost" id="explainBtn" style="margin-top:12px"></button>
+  <div class="ai" id="explainOut"></div>
+</div>
+
+<div class="card">
+  <h2 id="t_expiry"></h2>
+  <div class="sub" id="s_expiry"></div>
+  <div id="expiryList"></div>
+  <details style="margin-top:10px">
+    <summary id="t_addbatch"></summary>
+    <div class="edit">
+      <div class="full"><label id="l_med"></label><select id="bMed"></select></div>
+      <div><label id="l_qty"></label><input id="bQty" type="number" inputmode="numeric" min="1"></div>
+      <div><label id="l_left"></label><input id="bLeft" type="number" inputmode="numeric" min="0" max="24"></div>
+      <div class="full"><button class="btn wide" id="addBatch"></button></div>
+    </div>
+  </details>
+</div>
+
+<div class="card">
+  <h2 id="t_ask"></h2>
+  <div class="sub" id="s_ask"></div>
+  <div id="chips"></div>
+  <div class="ai" id="askOut"></div>
+</div>
+
+<div class="card">
+  <h2 id="t_import"></h2>
+  <div class="sub" id="s_import"></div>
+  <div class="fmt" id="fmtHelp"></div>
+  <textarea id="raw" style="margin-top:9px"></textarea>
+  <div class="grid3" style="margin-top:9px">
+    <button class="btn wide" id="readBtn" style="grid-column:1/-1"></button>
+  </div>
+  <div class="ai" id="importOut"></div>
+  <div style="margin-top:11px"><button class="btn ghost wide" id="resetBtn"></button></div>
+</div>
+
+<div class="card">
+  <h2 id="t_shop"></h2>
+  <div class="sub" id="s_shop"></div>
+  <div id="shopList"></div>
+</div>
+
+<footer id="foot"></footer>
+</div>
+
+<script>
+/* ------------------------------------------------------------------ i18n */
+const L = {
+ en:{
+  tag:"Stock and expiry help for a small pharmacy — works offline, no account needed",
+  free:"free · no login",
+  order:"Order this month", sorder:"Worked out from your last three months of sales, then rounded up to a full pack.",
+  total:"Total order value", explain:"Explain this plan to me",
+  expiry:"Batches near expiry", sexpiry:"Add any batch with an expiry date coming up. The app checks whether it will sell in time.",
+  addbatch:"Add a batch", med:"Medicine", qty:"Units in batch", left:"Months left before expiry", add:"Add",
+  ask:"Quick questions", sask:"Tap a question — the answer is worked out from your own numbers above.",
+  imp:"Enter your sales register", simp:"Paste your medicines in the format shown below, one per line.",
+  fmt:"Name, pack size, MRP, shelf life (months), stock in hand, sales Jan..Dec\nAmoxicillin 500mg, 50, 9.5, 8, 70, 305,292,441,507,504,388,346,274,280,267,266,256\n\u2014 you can also paste columns copied from Excel (tab-separated), or leave a field blank to use a sensible default.",
+  read:"Read this into my shop", reset:"Restore the sample shop",
+  shop:"Your medicines", sshop:"Tap any medicine to correct its stock or last month's sales.",
+  stock:"Stock in hand", lastm:"Last month's sales", pack:"Pack size", mrp:"MRP",
+  urgent:"order today", soon:"order this cycle", hold:"enough for now", over:"overstocked", disc:"discount",
+  units:"units", cover:"months of cover", sells:"about {n} will sell before then",
+  markdown:"Mark down {p}% on {n} units", safe:"Will sell in time — no discount needed",
+  none:"Nothing needs ordering right now.", noBatch:"No batches added yet.",
+  bad:"Could not find any medicines in that text. Check the format below and try again.",
+  imported:"Read {n} medicines into your shop.",
+  foot:"Prototype · Aavishkar Research Convention 2025-26 · sample data is synthetic · runs fully in your browser, nothing is sent anywhere",
+  chips:["Why this order?","Where is the most money tied up?","What should I discount first?","Which medicines are short?"],
+  a_why:"The order list is sorted by how soon each medicine will run out. {top} has the least cover, about {cov} months, so it is ordered first at {qty} units ({val}). Anything with more than 2.5 months of cover is skipped this cycle to save cash for what is closer to running out.",
+  a_why_none:"Nothing needs ordering this month — every medicine has enough cover for now.",
+  a_money:"{top} has the most value sitting in stock: {units} units worth about {val} at cost. If it is also slow-moving, that is cash that could instead fund faster sellers.",
+  a_disc:"{top} should be discounted first: {qty} more units than will sell before its {left}-month expiry, so a {rate}% markdown is suggested on those units, worth about {val} if lost outright.",
+  a_disc_none:"No batch is flagged for a discount right now — add one under \u201cBatches near expiry\u201d to check it.",
+  a_short:"{list} are ordered as urgent \u2014 under 0.4 months of cover, meaning stock could run out before the next delivery.",
+  a_short_none:"No medicine is critically short right now.",
+  foot2:"Answers are calculated directly from the numbers above \u2014 no AI is used in this version, so it works on any device without an account."
+ },
+ mr:{
+  tag:"छोट्या मेडिकलसाठी स्टॉक आणि एक्सपायरी मदत — इंटरनेटशिवायही चालते, लॉगिन लागत नाही",
+  free:"मोफत · लॉगिन नाही",
+  order:"या महिन्याची ऑर्डर", sorder:"मागील तीन महिन्यांच्या विक्रीवरून काढलेली, पूर्ण पॅकपर्यंत गोल केलेली.",
+  total:"एकूण ऑर्डर रक्कम", explain:"हे मला समजावून सांगा",
+  expiry:"एक्सपायरी जवळ असलेले बॅच", sexpiry:"एक्सपायरी जवळ असलेला बॅच इथे टाका. वेळेत विकला जाईल का ते तपासले जाईल.",
+  addbatch:"बॅच टाका", med:"औषध", qty:"बॅचमधील नग", left:"एक्सपायरीला किती महिने", add:"जोडा",
+  ask:"पटकन प्रश्न", sask:"प्रश्नावर टॅप करा — उत्तर वरील तुमच्याच आकड्यांवरून काढले जाते.",
+  imp:"तुमची विक्री नोंद टाका", simp:"खालील नमुन्याप्रमाणे, एका ओळीत एक औषध याप्रमाणे टाका.",
+  fmt:"नाव, पॅक साइज, एमआरपी, शेल्फ लाइफ (महिने), सध्याचा स्टॉक, विक्री जाने..डिसें\nAmoxicillin 500mg, 50, 9.5, 8, 70, 305,292,441,507,504,388,346,274,280,267,266,256\n\u2014 एक्सेलमधून कॉपी केलेले कॉलम्सही चालतील (टॅबने वेगळे केलेले), किंवा एखादे घर रिकामे ठेवल्यास योग्य डिफॉल्ट वापरले जाईल.",
+  read:"हे माझ्या दुकानात वाचा", reset:"नमुना दुकान परत आणा",
+  shop:"तुमची औषधे", sshop:"स्टॉक किंवा मागील महिन्याची विक्री दुरुस्त करण्यासाठी औषधावर टॅप करा.",
+  stock:"सध्याचा स्टॉक", lastm:"मागील महिन्याची विक्री", pack:"पॅक साइज", mrp:"एमआरपी",
+  urgent:"आजच ऑर्डर करा", soon:"या फेरीत ऑर्डर करा", hold:"सध्या पुरेसे", over:"जास्त स्टॉक", disc:"सवलत",
+  units:"नग", cover:"महिन्यांचा साठा", sells:"तोपर्यंत सुमारे {n} विकले जातील",
+  markdown:"{n} नगांवर {p}% सवलत द्या", safe:"वेळेत विकले जाईल — सवलत नको",
+  none:"आत्ता काहीही ऑर्डर करण्याची गरज नाही.", noBatch:"अजून कोणताही बॅच टाकलेला नाही.",
+  bad:"त्या मजकुरात कोणतेही औषध सापडले नाही. खालील नमुना पाहून पुन्हा प्रयत्न करा.",
+  imported:"{n} औषधे वाचून दुकानात टाकली.",
+  foot:"प्रोटोटाइप · आविष्कार संशोधन स्पर्धा २०२५-२६ · नमुना आकडेवारी काल्पनिक आहे · हे पूर्णपणे तुमच्या ब्राउझरमध्ये चालते, काहीही कुठेही पाठवले जात नाही",
+  chips:["ही ऑर्डर का?","सर्वात जास्त पैसे कशात अडकले?","आधी कशावर सवलत द्यावी?","कोणती औषधे कमी आहेत?"],
+  a_why:"साठा किती लवकर संपेल यानुसार यादी लावली आहे. {top} कडे सर्वात कमी साठा आहे, सुमारे {cov} महिन्यांचा, म्हणून तो आधी {qty} नगांना ({val}) मागवला आहे. 2.5 महिन्यांपेक्षा जास्त साठा असलेले या फेरीत वगळले आहेत, जेणेकरून पैसे लवकर संपणाऱ्या औषधांसाठी राहतील.",
+  a_why_none:"या महिन्यात काहीही ऑर्डर करण्याची गरज नाही — सर्व औषधांचा साठा पुरेसा आहे.",
+  a_money:"{top} मध्ये सर्वात जास्त पैसे अडकले आहेत: {units} नग, अंदाजे {val} किमतीचे. जर हे हळू विकले जात असेल, तर हे पैसे लवकर विकल्या जाणाऱ्या औषधांसाठी वापरता येतील.",
+  a_disc:"{top} वर आधी सवलत द्यावी: त्याच्या {left}-महिन्यांच्या एक्सपायरीपूर्वी विकल्या जाणाऱ्यापेक्षा {qty} नग जास्त आहेत, म्हणून त्या नगांवर {rate}% सवलतीची शिफारस आहे, जे न विकल्यास सुमारे {val} चे नुकसान होईल.",
+  a_disc_none:"आत्ता कोणताही बॅच सवलतीसाठी दाखवलेला नाही — तपासण्यासाठी \u201cएक्सपायरी जवळ असलेले बॅच\u201d खाली एक टाका.",
+  a_short:"{list} तातडीने मागवावे लागतील — 0.4 महिन्यांपेक्षा कमी साठा आहे, म्हणजे पुढील डिलिव्हरीआधी संपू शकतो.",
+  a_short_none:"आत्ता कोणतेही औषध गंभीरपणे कमी नाही.",
+  foot2:"उत्तरे वरील आकड्यांवरून थेट काढली जातात — या आवृत्तीत AI वापरलेले नाही, त्यामुळे हे कोणत्याही डिव्हाइसवर खात्याशिवाय चालते."
+ },
+ hi:{
+  tag:"छोटे मेडिकल स्टोर के लिए स्टॉक और एक्सपायरी सहायता — बिना इंटरनेट भी चलती है, लॉगिन ज़रूरी नहीं",
+  free:"मुफ़्त · लॉगिन नहीं",
+  order:"इस महीने का ऑर्डर", sorder:"पिछले तीन महीनों की बिक्री से निकाला गया, पूरे पैक तक गोल किया हुआ.",
+  total:"कुल ऑर्डर रकम", explain:"यह मुझे समझाइए",
+  expiry:"एक्सपायरी के पास वाले बैच", sexpiry:"जिस बैच की एक्सपायरी पास है उसे यहाँ डालें. समय पर बिकेगा या नहीं, जाँच होगी.",
+  addbatch:"बैच जोड़ें", med:"दवा", qty:"बैच में नग", left:"एक्सपायरी में कितने महीने", add:"जोड़ें",
+  ask:"जल्दी सवाल", sask:"किसी सवाल पर टैप करें — जवाब ऊपर के आपके अपने आँकड़ों से निकाला जाता है.",
+  imp:"अपनी बिक्री की नोंद डालें", simp:"नीचे दिए गए नमूने के अनुसार, हर लाइन में एक दवा डालें.",
+  fmt:"नाम, पैक साइज़, एमआरपी, शेल्फ लाइफ (महीने), मौजूदा स्टॉक, बिक्री जन..दिस\nAmoxicillin 500mg, 50, 9.5, 8, 70, 305,292,441,507,504,388,346,274,280,267,266,256\n\u2014 एक्सेल से कॉपी किए कॉलम भी चलेंगे (टैब से अलग किए हुए), या कोई कॉलम खाली छोड़ने पर उचित डिफ़ॉल्ट इस्तेमाल होगा.",
+  read:"इसे मेरी दुकान में पढ़ें", reset:"नमूना दुकान वापस लाएँ",
+  shop:"आपकी दवाइयाँ", sshop:"स्टॉक या पिछले महीने की बिक्री ठीक करने के लिए दवा पर टैप करें.",
+  stock:"मौजूदा स्टॉक", lastm:"पिछले महीने की बिक्री", pack:"पैक साइज़", mrp:"एमआरपी",
+  urgent:"आज ही ऑर्डर करें", soon:"इस चक्र में ऑर्डर करें", hold:"अभी पर्याप्त", over:"ज़्यादा स्टॉक", disc:"छूट",
+  units:"नग", cover:"महीनों का स्टॉक", sells:"तब तक लगभग {n} बिकेंगे",
+  markdown:"{n} नग पर {p}% छूट दें", safe:"समय पर बिक जाएगा — छूट की ज़रूरत नहीं",
+  none:"अभी कुछ ऑर्डर करने की ज़रूरत नहीं.", noBatch:"अभी कोई बैच नहीं जोड़ा गया.",
+  bad:"उस टेक्स्ट में कोई दवा नहीं मिली. नीचे दिया गया नमूना देखकर फिर कोशिश करें.",
+  imported:"{n} दवाइयाँ पढ़कर दुकान में डाल दीं.",
+  foot:"प्रोटोटाइप · आविष्कार अनुसंधान स्पर्धा 2025-26 · नमूना आँकड़े काल्पनिक हैं · यह पूरी तरह आपके ब्राउज़र में चलता है, कहीं कुछ नहीं भेजा जाता",
+  chips:["यह ऑर्डर क्यों?","सबसे ज़्यादा पैसा कहाँ फँसा है?","पहले किस पर छूट दूँ?","कौन सी दवाएँ कम हैं?"],
+  a_why:"सूची इस हिसाब से लगाई गई है कि कौन सी दवा सबसे जल्दी खत्म होगी. {top} के पास सबसे कम स्टॉक है, लगभग {cov} महीने का, इसलिए इसे पहले {qty} नग ({val}) का ऑर्डर दिया गया है. 2.5 महीने से ज़्यादा स्टॉक वालों को इस चक्र में छोड़ दिया गया है ताकि पैसा जल्दी खत्म होने वाली दवाओं के लिए बचे.",
+  a_why_none:"इस महीने कुछ ऑर्डर करने की ज़रूरत नहीं — सभी दवाओं का स्टॉक पर्याप्त है.",
+  a_money:"{top} में सबसे ज़्यादा पैसा फँसा है: {units} नग, लगभग {val} के. अगर यह धीरे बिकती है, तो यह पैसा तेज़ बिकने वाली दवाओं में लगाया जा सकता है.",
+  a_disc:"{top} पर पहले छूट देनी चाहिए: इसकी {left}-महीने की एक्सपायरी से पहले बिकने वाली मात्रा से {qty} नग ज़्यादा हैं, इसलिए उन नगों पर {rate}% छूट की सलाह है, जो न बिकने पर लगभग {val} का नुकसान होगा.",
+  a_disc_none:"अभी किसी बैच पर छूट का सुझाव नहीं है — जाँचने के लिए \u201cएक्सपायरी के पास वाले बैच\u201d में एक जोड़ें.",
+  a_short:"{list} को तुरंत मंगाना होगा — 0.4 महीने से कम स्टॉक है, यानी अगली डिलीवरी से पहले खत्म हो सकता है.",
+  a_short_none:"अभी कोई दवा गंभीर रूप से कम नहीं है.",
+  foot2:"जवाब ऊपर के आँकड़ों से सीधे निकाले जाते हैं — इस संस्करण में AI इस्तेमाल नहीं है, इसलिए यह बिना खाते के किसी भी डिवाइस पर चलता है."
+ }
+};
+const LNAME = {en:"English", mr:"Marathi (मराठी)", hi:"Hindi (हिंदी)"};
+
+/* ------------------------------------------------------------------ data */
+const SAMPLE = [
+ {name:"Amoxicillin 500mg", pack:50, mrp:9.5, shelf:8, stock:70,  sales:[305,292,441,507,504,388,346,274,280,267,266,256]},
+ {name:"Azithromycin 500mg",pack:30, mrp:22,  shelf:7, stock:25,  sales:[90,114,156,196,178,151,116,117,97,111,94,100]},
+ {name:"ORS sachets",       pack:100,mrp:18,  shelf:10,stock:600, sales:[556,695,617,608,508,501,367,321,267,284,327,535]},
+ {name:"Paracetamol 500mg", pack:250,mrp:1.6, shelf:9, stock:300, sales:[1201,1137,1516,1426,1346,1198,1155,1014,1188,1097,1076,1024]},
+ {name:"Metformin 500mg",   pack:200,mrp:2.4, shelf:9, stock:1200,sales:[873,972,872,927,864,936,871,954,881,918,873,945]},
+ {name:"Glimepiride 2mg",   pack:50, mrp:4.1, shelf:9, stock:230, sales:[206,194,216,194,206,196,212,188,212,196,200,198]},
+ {name:"Pantoprazole 40mg", pack:100,mrp:6.2, shelf:8, stock:140, sales:[407,395,399,361,410,379,450,410,415,357,395,365]},
+ {name:"Vitamin B-Complex", pack:50, mrp:5.5, shelf:8, stock:300, sales:[281,259,268,242,257,244,289,262,265,257,259,252]},
+ {name:"Calcium + Vit D3",  pack:50, mrp:8,   shelf:8, stock:20,  sales:[43,45,42,45,44,50,45,49,45,47,42,47]},
+ {name:"Diclofenac gel 30g",pack:25, mrp:95,  shelf:8, stock:26,  sales:[16,16,17,17,18,15,16,17,18,17,17,14]},
+ {name:"Chloroquine 250mg", pack:25, mrp:12,  shelf:7, stock:90,  sales:[35,56,144,267,216,147,62,33,22,24,26,32]}
+];
+const SAMPLE_BATCHES = [{med:"Diclofenac gel 30g",qty:60,left:2},{med:"Chloroquine 250mg",qty:150,left:3}];
+const MARGIN = 1.2, TIERS = [[0.5,0.30],[0.25,0.20],[0,0.10]];
+
+let lang = "en";
+let meds = [], batches = [];
+const KEY = "pharmacy-static-app-v1";
+
+function load(){
+  try{
+    const raw = localStorage.getItem(KEY);
+    if(raw){ const d = JSON.parse(raw); if(Array.isArray(d.meds) && d.meds.length){ meds = d.meds; batches = d.batches||[]; lang = d.lang||"en"; return; } }
+  }catch(e){}
+  meds = JSON.parse(JSON.stringify(SAMPLE)); batches = JSON.parse(JSON.stringify(SAMPLE_BATCHES));
+}
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify({meds,batches,lang})); }catch(e){} }
+
+/* --------------------------------------------------------------- the maths */
+function forecast(sales){
+  const s = sales.filter(x=>typeof x === "number" && isFinite(x));
+  if(!s.length) return 0;
+  if(s.length < 3) return Math.round(s.reduce((a,b)=>a+b,0)/s.length);
+  const n = s.length, a = s[n-1], b = s[n-2], c = s[n-3];
+  const lvl = 0.5*a + 0.3*b + 0.2*c;
+  const tr = 0.5*(a-b) + 0.5*(b-c);
+  return Math.max(0, Math.round(lvl + 0.6*tr));
+}
+function plan(){
+  return meds.map(m=>{
+    const fc = forecast(m.sales);
+    const target = Math.round(fc*MARGIN);
+    const gap = target - (m.stock||0);
+    const order = gap <= 0 ? 0 : Math.ceil(gap/m.pack)*m.pack;
+    const cover = fc > 0 ? (m.stock||0)/fc : 99;
+    const state = order > 0 ? (cover < 0.4 ? "urgent" : "soon") : (cover > 2.5 ? "over" : "hold");
+    return {m, fc, target, order, cover, state, value: order*m.mrp*0.78, stockValue: (m.stock||0)*m.mrp*0.78};
+  });
+}
+function expiryPlan(){
+  return batches.map(b=>{
+    const m = meds.find(x=>x.name === b.med);
+    if(!m) return null;
+    const fc = forecast(m.sales);
+    const will = Math.round(fc*b.left);
+    const surplus = Math.max(0, b.qty - will);
+    const share = b.qty ? surplus/b.qty : 0;
+    const rate = surplus > 0 ? TIERS.find(t=>share >= t[0])[1] : 0;
+    return {b, m, fc, will, surplus, rate, atRisk: surplus*m.mrp, cost: surplus*m.mrp*rate};
+  }).filter(Boolean);
+}
+
+/* ------------------------------------------------------------------- view */
+const $ = id => document.getElementById(id);
+const T = k => L[lang][k];
+const rs = n => "\u20B9" + Math.round(n).toLocaleString("en-IN");
+const fill = (s,o) => s.replace(/\{(\w+)\}/g, (_,k)=>o[k]);
+function esc(s){ return String(s).replace(/[<>&]/g, c=>({"<":"&lt;",">":"&gt;","&":"&amp;"}[c])); }
+
+function render(){
+  document.documentElement.lang = lang;
+  $("badgeFree").textContent = T("free");
+  $("tagline").textContent = T("tag");
+  $("t_order").textContent = T("order"); $("s_order").textContent = T("sorder");
+  $("t_total").textContent = T("total"); $("explainBtn").textContent = T("explain");
+  $("t_expiry").textContent = T("expiry"); $("s_expiry").textContent = T("sexpiry");
+  $("t_addbatch").textContent = T("addbatch");
+  $("l_med").textContent = T("med"); $("l_qty").textContent = T("qty"); $("l_left").textContent = T("left");
+  $("addBatch").textContent = T("add");
+  $("t_ask").textContent = T("ask"); $("s_ask").textContent = T("sask");
+  $("t_import").textContent = T("imp"); $("s_import").textContent = T("simp");
+  $("fmtHelp").textContent = T("fmt");
+  $("readBtn").textContent = T("read"); $("resetBtn").textContent = T("reset");
+  $("t_shop").textContent = T("shop"); $("s_shop").textContent = T("sshop");
+  $("foot").textContent = T("foot");
+  $("chips").innerHTML = T("chips").map((c,i)=>`<span class="chip" data-q="${i}">${c}</span>`).join("");
+  $("chips").querySelectorAll(".chip").forEach(c=>c.onclick=()=>answer(+c.dataset.q));
+
+  const P = plan().sort((a,b)=>a.cover - b.cover);
+  const need = P.filter(p=>p.order > 0);
+  $("orderList").innerHTML = need.length ? need.map(p=>`
+    <div class="row"><div>
+      <div class="nm">${esc(p.m.name)}</div>
+      <div class="meta"><span class="pill ${p.state}">${T(p.state)}</span>${p.m.stock} ${T("units")} · ${p.cover.toFixed(1)} ${T("cover")}</div>
+    </div><div class="qty">${p.order}<small>${rs(p.value)}</small></div></div>`).join("")
+    : `<p class="muted">${T("none")}</p>`;
+  $("orderTotal").textContent = rs(need.reduce((a,p)=>a+p.value,0));
+
+  const E = expiryPlan().sort((a,b)=>a.b.left - b.b.left);
+  $("expiryList").innerHTML = E.length ? E.map((e,i)=>`
+    <div class="row"><div>
+      <div class="nm">${esc(e.b.med)}</div>
+      <div class="meta">${e.b.qty} ${T("units")} · ${e.b.left} ${T("left").toLowerCase()} · ${fill(T("sells"),{n:e.will})}</div>
+      <div class="meta">${e.surplus > 0
+        ? `<span class="pill disc">${T("disc")}</span>${fill(T("markdown"),{p:Math.round(e.rate*100), n:e.surplus})} · ${rs(e.atRisk)}`
+        : T("safe")}</div>
+    </div><div class="qty">${e.surplus > 0 ? Math.round(e.rate*100)+"%" : "\u2014"}<small><button class="btn ghost" style="padding:2px 8px;min-height:0;font-size:12px" data-rm="${i}">\u00d7</button></small></div></div>`).join("")
+    : `<p class="muted">${T("noBatch")}</p>`;
+  $("expiryList").querySelectorAll("[data-rm]").forEach(btn=>btn.onclick=()=>{
+    const e = E[+btn.dataset.rm];
+    batches = batches.filter(x=>x !== e.b); save(); render();
+  });
+  $("bMed").innerHTML = meds.map(m=>`<option>${esc(m.name)}</option>`).join("");
+
+  $("shopList").innerHTML = meds.map((m,i)=>`
+    <details><summary style="padding:9px 0;font-weight:600;color:var(--ink)">${esc(m.name)}
+      <span class="meta" style="font-weight:400"> — ${m.stock} ${T("units")}</span></summary>
+      <div class="edit">
+        <div><label>${T("stock")}</label><input type="number" data-f="stock" data-i="${i}" value="${m.stock}"></div>
+        <div><label>${T("lastm")}</label><input type="number" data-f="last" data-i="${i}" value="${m.sales[m.sales.length-1]}"></div>
+        <div><label>${T("pack")}</label><input type="number" data-f="pack" data-i="${i}" value="${m.pack}"></div>
+        <div><label>${T("mrp")}</label><input type="number" step="0.1" data-f="mrp" data-i="${i}" value="${m.mrp}"></div>
+      </div></details>`).join("");
+  $("shopList").querySelectorAll("input[data-f]").forEach(inp=>{
+    inp.onchange = () => {
+      const m = meds[+inp.dataset.i], v = Number(inp.value);
+      if(!isFinite(v) || v < 0) return;
+      if(inp.dataset.f === "last") m.sales[m.sales.length-1] = Math.round(v);
+      else m[inp.dataset.f] = inp.dataset.f === "mrp" ? v : Math.round(v);
+      save(); render();
+    };
+  });
+  $("explainOut").textContent = ""; $("askOut").textContent = "";
+  save();
+}
+
+/* --------------------------------------------------------- rule-based Q&A */
+function explain(){
+  const P = plan().sort((a,b)=>a.cover - b.cover);
+  const need = P.filter(p=>p.order > 0);
+  const out = $("explainOut");
+  if(!need.length){ out.textContent = T("a_why_none"); return; }
+  const top = need[0];
+  out.textContent = fill(T("a_why"), {top: top.m.name, cov: top.cover.toFixed(1), qty: top.order, val: rs(top.value)});
+}
+function answer(i){
+  const out = $("askOut");
+  const P = plan();
+  if(i === 0){ explain(); return; }
+  if(i === 1){
+    const top = [...P].sort((a,b)=>b.stockValue - a.stockValue)[0];
+    out.textContent = fill(T("a_money"), {top: top.m.name, units: top.m.stock, val: rs(top.stockValue)});
+    return;
+  }
+  if(i === 2){
+    const E = expiryPlan().filter(e=>e.surplus > 0).sort((a,b)=>b.rate - a.rate || b.atRisk - a.atRisk);
+    if(!E.length){ out.textContent = T("a_disc_none"); return; }
+    const top = E[0];
+    out.textContent = fill(T("a_disc"), {top: top.m.name, qty: top.surplus, left: top.b.left, rate: Math.round(top.rate*100), val: rs(top.atRisk)});
+    return;
+  }
+  if(i === 3){
+    const urgent = P.filter(p=>p.state === "urgent").map(p=>p.m.name);
+    out.textContent = urgent.length ? fill(T("a_short"), {list: urgent.join(", ")}) : T("a_short_none");
+    return;
+  }
+}
+
+/* ---------------------------------------------------------- text importer */
+// Accepts lines separated by commas, semicolons, pipes, or tabs (e.g. pasted from Excel).
+// Expected order per line: name, pack, mrp, shelf, stock, then up to 12 monthly sales figures
+// (sales can also be one comma-separated group as the 6th field). Header rows and blank
+// lines are skipped. Missing numeric fields fall back to sensible defaults.
+function parseRegister(text){
+  const lines = text.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
+  const rows = [];
+  for(const line of lines){
+    if(/^(name|medicine|\u0928\u093e\u0935|\u0914\u0937\u0927)\b/i.test(line)) continue; // header row
+    let parts = line.includes("\t") ? line.split("\t") : line.split(/[,;|]/);
+    parts = parts.map(p=>p.trim()).filter((p,idx)=> idx===0 ? true : p!=="" || true);
+    if(!parts.length || !parts[0]) continue;
+    const name = parts[0].replace(/^["']|["']$/g,"");
+    if(!/[a-zA-Z\u0900-\u097F]/.test(name)) continue;
+    const nums = parts.slice(1).flatMap(p=>String(p).split(/[,\s]+/)).map(Number).filter(x=>isFinite(x));
+    if(!nums.length) continue;
+    let pack=10, mrp=1, shelf=8, stock=0, sales=[];
+    if(nums.length >= 5){
+      [pack, mrp, shelf, stock] = nums.slice(0,4);
+      sales = nums.slice(4);
+    } else if(nums.length === 4){
+      [pack, mrp, shelf, stock] = nums; sales = [];
+    } else {
+      sales = nums; // just a run of monthly figures after the name
+    }
+    if(!sales.length) continue;
+    rows.push({
+      name: name.slice(0,60),
+      pack: Math.max(1, Math.round(pack||10)),
+      mrp: Math.max(0.1, mrp||1),
+      shelf: Math.max(1, Math.round(shelf||8)),
+      stock: Math.max(0, Math.round(stock||0)),
+      sales: sales.slice(-12).map(x=>Math.max(0, Math.round(x)))
+    });
+  }
+  return rows;
+}
+function readRegister(){
+  const out = $("importOut");
+  out.classList.remove("err");
+  const rows = parseRegister($("raw").value);
+  if(!rows.length){ out.textContent = T("bad"); out.classList.add("err"); return; }
+  meds = rows;
+  batches = batches.filter(b=>meds.some(m=>m.name === b.med));
+  out.textContent = fill(T("imported"), {n: meds.length});
+  $("raw").value = "";
+  render();
+}
+
+/* ------------------------------------------------------------- controls */
+document.querySelectorAll("[data-lang]").forEach(b=>b.onclick = ()=>{
+  lang = b.dataset.lang;
+  document.querySelectorAll("[data-lang]").forEach(x=>x.setAttribute("aria-pressed", String(x === b)));
+  render();
+});
+$("explainBtn").onclick = explain;
+$("readBtn").onclick = readRegister;
+$("addBatch").onclick = ()=>{
+  const med = $("bMed").value, qty = Math.round(Number($("bQty").value)), left = Math.round(Number($("bLeft").value));
+  if(!med || !(qty > 0) || !(left >= 0)) return;
+  batches.push({med, qty, left});
+  $("bQty").value = ""; $("bLeft").value = "";
+  save(); render();
+};
+$("resetBtn").onclick = ()=>{
+  meds = JSON.parse(JSON.stringify(SAMPLE)); batches = JSON.parse(JSON.stringify(SAMPLE_BATCHES));
+  $("explainOut").textContent = ""; $("askOut").textContent = ""; $("importOut").textContent = "";
+  save(); render();
+};
+
+load();
+document.querySelectorAll("[data-lang]").forEach(x=>x.setAttribute("aria-pressed", String(x.dataset.lang === lang)));
+render();
+</script>
+</body>
+</html>
