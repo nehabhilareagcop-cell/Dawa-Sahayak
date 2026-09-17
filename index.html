@@ -6,27 +6,37 @@
 <title>Dawa Sahayak — pharmacy stock assistant</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Noto+Serif+Devanagari:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --paper:#E7ECE6; --panel:#FCFDFB; --panel2:#F1F5F0; --ink:#101F19; --ink2:#4C5E56;
-  --line:#CCD7CD; --line2:#DFE7DF;
-  --green:#14624A; --greenS:#D8E9DE; --amber:#A8701A; --amberS:#F2E3C2;
-  --rust:#9D3527; --rustS:#EFD6D1; --shadow:rgba(16,31,25,.10);
+  --ink:#152A20; --ink2:#4F6558;
+  --paper:#EFE9D8; --panel:#FFFDF6; --panel2:#F1EAD4;
+  --line:#DDD3B5; --line2:#E8E1C9;
+  --brand:#1F5E45; --brandDark:#123B2A; --brandInk:#EAF3EC;
+  --marigold:#D98E1B; --marigoldDark:#B4750F; --marigoldS:#F7E3BB;
+  --rust:#AE3B2E; --rustS:#F3D9D2;
+  --good:#1F5E45; --goodS:#DCEAE0;
+  --shadow:rgba(20,40,30,.12);
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --paper:#0D1411; --panel:#151E1A; --panel2:#1B2622; --ink:#E2EAE5; --ink2:#93A79D;
-    --line:#26332D; --line2:#1F2A25;
-    --green:#4FB38C; --greenS:#173026; --amber:#D4A24A; --amberS:#332714;
-    --rust:#D9705E; --rustS:#331B17; --shadow:rgba(0,0,0,.4);
+    --ink:#EDEAD9; --ink2:#AEB6A8;
+    --paper:#101B14; --panel:#17241C; --panel2:#1D2B21;
+    --line:#2B3A2F; --line2:#233024;
+    --marigold:#E4A53B; --marigoldDark:#F0B854; --marigoldS:#3A2C12;
+    --rust:#D97764; --rustS:#3A1E19;
+    --good:#3FA37A; --goodS:#16281F;
+    --shadow:rgba(0,0,0,.5);
   }
 }
 :root[data-theme="dark"]{
-  --paper:#0D1411; --panel:#151E1A; --panel2:#1B2622; --ink:#E2EAE5; --ink2:#93A79D;
-  --line:#26332D; --line2:#1F2A25;
-  --green:#4FB38C; --greenS:#173026; --amber:#D4A24A; --amberS:#332714;
-  --rust:#D9705E; --rustS:#331B17; --shadow:rgba(0,0,0,.4);
+  --ink:#EDEAD9; --ink2:#AEB6A8;
+  --paper:#101B14; --panel:#17241C; --panel2:#1D2B21;
+  --line:#2B3A2F; --line2:#233024;
+  --marigold:#E4A53B; --marigoldDark:#F0B854; --marigoldS:#3A2C12;
+  --rust:#D97764; --rustS:#3A1E19;
+  --good:#3FA37A; --goodS:#16281F;
+  --shadow:rgba(0,0,0,.5);
 }
 *{box-sizing:border-box}
 html,body{margin:0}
@@ -36,115 +46,198 @@ body{
   font-size:15.5px; line-height:1.55; font-variant-numeric:tabular-nums;
   -webkit-font-smoothing:antialiased;
 }
-.wrap{max-width:720px;margin:0 auto;padding:18px 16px 70px}
-h1{font-family:Archivo,"Noto Sans Devanagari",sans-serif;font-size:25px;font-weight:700;margin:0;letter-spacing:-.01em}
-h2{font-family:Archivo,"Noto Sans Devanagari",sans-serif;font-size:17px;font-weight:600;margin:0 0 2px}
+h1,h2,h3,.serif{font-family:"Fraunces","Noto Serif Devanagari",Georgia,serif}
 p{margin:.4em 0}
-.sub{color:var(--ink2);font-size:13.5px}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:15px;margin-bottom:14px;box-shadow:0 1px 2px var(--shadow)}
-header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:16px;flex-wrap:wrap}
-.seg{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--panel)}
-.seg button{font:inherit;font-size:13px;padding:6px 11px;background:transparent;color:var(--ink2);border:0;cursor:pointer}
-.seg button[aria-pressed=true]{background:var(--green);color:var(--panel)}
-button{font-family:inherit}
-.btn{font:inherit;font-size:14.5px;font-weight:600;padding:10px 15px;border-radius:6px;border:1px solid var(--green);
-     background:var(--green);color:var(--panel);cursor:pointer;min-height:44px}
-.btn.ghost{background:transparent;color:var(--green)}
-.btn:disabled{opacity:.5;cursor:default}
-.btn.wide{width:100%}
-:focus-visible{outline:2px solid var(--green);outline-offset:2px}
-textarea,input,select{font:inherit;font-size:15px;width:100%;padding:9px 10px;border:1px solid var(--line);
-  border-radius:6px;background:var(--panel2);color:var(--ink)}
-textarea{min-height:110px;resize:vertical;font-family:ui-monospace,"SF Mono",Consolas,monospace;font-size:13.5px}
-label{font-size:13px;color:var(--ink2);display:block;margin-bottom:3px}
-.grid3{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:11px 0;border-bottom:1px solid var(--line2)}
+.wrap{max-width:720px;margin:0 auto;padding:0 0 74px}
+.inner{padding:0 18px}
+:focus-visible{outline:2px solid var(--marigold);outline-offset:2px}
+
+/* ---------------- masthead ---------------- */
+.masthead{
+  background:
+    linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(0,0,0,.08) 100%),
+    repeating-linear-gradient(115deg, transparent 0 38px, rgba(234,243,236,.05) 38px 39px),
+    var(--brandDark);
+  background-color:var(--brand);
+  color:var(--brandInk);
+  padding:22px 18px 20px;
+  border-bottom:3px solid var(--marigold);
+}
+.mrow{display:flex;align-items:center;gap:11px;flex-wrap:wrap;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.brand svg{flex:none;width:34px;height:34px}
+.brand h1{font-size:24px;font-weight:700;margin:0;letter-spacing:.01em;color:var(--brandInk)}
+.brand h1 em{font-style:italic;font-weight:500;opacity:.92}
+.badge{display:inline-block;font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;
+  background:var(--marigold);color:#241a05;margin-left:9px;vertical-align:2px;white-space:nowrap}
+.tagline{font-size:13.5px;color:var(--brandInk);opacity:.88;margin:9px 0 0;max-width:44ch}
+.seg{display:inline-flex;border:1px solid rgba(234,243,236,.4);border-radius:20px;overflow:hidden;background:rgba(0,0,0,.12)}
+.seg button{font:inherit;font-size:12.5px;font-weight:600;padding:6px 12px;background:transparent;color:var(--brandInk);border:0;cursor:pointer;opacity:.75}
+.seg button[aria-pressed=true]{background:var(--marigold);color:#241a05;opacity:1}
+
+/* ---------------- sections ---------------- */
+section{margin-top:22px}
+.shead{padding:0 18px;margin-bottom:9px}
+.shead h2{font-size:19px;font-weight:600;margin:0 0 3px;color:var(--ink)}
+.shead .sub{color:var(--ink2);font-size:13px;max-width:52ch}
+
+.ledger{background:var(--panel);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.ledger .inner{padding:2px 18px 4px}
+.row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:12px 0;
+  border-bottom:1px solid var(--line2);border-left:3px solid transparent;padding-left:10px;margin-left:-10px}
 .row:last-child{border-bottom:0}
-.row .nm{font-weight:600;font-size:15px}
-.row .meta{font-size:12.5px;color:var(--ink2)}
-.qty{font-family:Archivo;font-weight:700;font-size:16px;text-align:right;white-space:nowrap}
+.row.st-urgent{border-left-color:var(--rust)}
+.row.st-soon{border-left-color:var(--marigold)}
+.row.st-hold{border-left-color:var(--good)}
+.row.st-over{border-left-color:var(--line)}
+.row .nm{font-weight:600;font-size:15.5px;font-family:"Fraunces","Noto Serif Devanagari",serif}
+.row .meta{font-size:12.5px;color:var(--ink2);margin-top:2px}
+.qty{font-family:"Fraunces","Noto Serif Devanagari",serif;font-weight:700;font-size:18px;text-align:right;white-space:nowrap}
 .qty small{display:block;font-family:"IBM Plex Sans";font-weight:500;font-size:11.5px;color:var(--ink2)}
 .pill{display:inline-block;font-size:11px;font-weight:600;padding:2px 7px;border-radius:4px;margin-right:6px}
 .pill.urgent{background:var(--rustS);color:var(--rust)}
-.pill.soon{background:var(--panel2);color:var(--ink2)}
-.pill.hold{background:var(--greenS);color:var(--green)}
-.pill.disc{background:var(--amberS);color:var(--amber)}
-.tot{display:flex;justify-content:space-between;font-weight:600;padding-top:11px;margin-top:4px;border-top:1px solid var(--line)}
-.ai{background:var(--panel2);border:1px solid var(--line2);border-radius:6px;padding:12px;margin-top:11px;white-space:pre-wrap;font-size:14.5px}
-.ai:empty{display:none}
-.muted{color:var(--ink2);font-size:13px}
-.chip{display:inline-block;font-size:12.5px;padding:6px 10px;border:1px solid var(--line);border-radius:14px;margin:4px 5px 0 0;cursor:pointer;background:var(--panel)}
-details summary{cursor:pointer;font-size:14px;font-weight:600;color:var(--green)}
-.edit{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.pill.soon{background:var(--marigoldS);color:var(--marigoldDark)}
+.pill.hold{background:var(--goodS);color:var(--good)}
+.pill.disc{background:var(--marigoldS);color:var(--marigoldDark)}
+
+.totband{display:flex;justify-content:space-between;align-items:baseline;background:var(--marigoldS);
+  margin:0 -18px;padding:12px 18px;border-top:1px solid var(--line)}
+.totband .lab{font-size:13px;color:var(--ink2);font-weight:600}
+.totband .val{font-family:"Fraunces","Noto Serif Devanagari",serif;font-weight:700;font-size:21px;color:var(--marigoldDark)}
+.muted{color:var(--ink2);font-size:13px;padding:14px 0}
+
+.actions{padding:14px 18px 4px;background:var(--panel)}
+.btn{font:inherit;font-size:14.5px;font-weight:600;padding:10px 16px;border-radius:22px;border:1.5px solid var(--ink);
+     background:var(--ink);color:var(--panel);cursor:pointer;min-height:44px}
+.btn.gold{background:var(--marigold);border-color:var(--marigoldDark);color:#241a05}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn:disabled{opacity:.5;cursor:default}
+.btn.wide{width:100%}
+button{font-family:inherit}
+
+.callout{margin:10px 18px 16px;padding:13px 15px 13px 17px;background:var(--panel2);border-left:3px solid var(--marigold);
+  border-radius:2px;font-size:14.5px;white-space:pre-wrap;position:relative}
+.callout:empty{display:none;margin:0;padding:0;border:0}
+.callout.err{border-left-color:var(--rust);color:var(--rust)}
+
+.expmark{width:44px;height:44px;border-radius:50%;background:var(--panel2);border:2px solid var(--line);
+  display:flex;align-items:center;justify-content:center;flex:none;font-family:"Fraunces","Noto Serif Devanagari",serif;
+  font-weight:700;font-size:14px;line-height:1.1;text-align:center;color:var(--ink2)}
+.exprow{display:grid;grid-template-columns:44px 1fr auto;gap:12px;align-items:center;padding:13px 0;border-bottom:1px solid var(--line2)}
+.exprow:last-child{border-bottom:0}
+.exprow.warn .expmark{border-color:var(--marigold);color:var(--marigoldDark);background:var(--marigoldS)}
+.exprow .nm{font-weight:600;font-size:15px;font-family:"Fraunces","Noto Serif Devanagari",serif}
+.exprow .meta{font-size:12.5px;color:var(--ink2);margin-top:2px}
+.rmx{background:transparent;border:1px solid var(--line);color:var(--ink2);border-radius:50%;width:24px;height:24px;
+  min-height:0;padding:0;font-size:14px;cursor:pointer;line-height:1}
+
+details{border-bottom:1px solid var(--line2);padding:2px 0}
+details:last-child{border-bottom:0}
+summary{cursor:pointer;font-size:14px;font-weight:600;color:var(--ink);padding:11px 0;list-style:none;
+  display:flex;align-items:center;gap:8px;font-family:"Fraunces","Noto Serif Devanagari",serif}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"▸";color:var(--marigold);font-size:11px;transition:transform .15s}
+details[open] summary::before{transform:rotate(90deg)}
+.dot{width:8px;height:8px;border-radius:50%;flex:none}
+.dot.urgent{background:var(--rust)} .dot.soon{background:var(--marigold)}
+.dot.hold{background:var(--good)} .dot.over{background:var(--line)}
+summary .meta2{font-weight:400;font-family:"IBM Plex Sans";font-size:12.5px;color:var(--ink2);margin-left:auto}
+
+.edit{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 0 14px 19px}
 .edit .full{grid-column:1/-1}
-.err{color:var(--rust);font-size:13.5px}
-.fmt{background:var(--panel2);border:1px solid var(--line2);border-radius:6px;padding:9px 10px;font-family:ui-monospace,"SF Mono",Consolas,monospace;font-size:12px;margin-top:8px;overflow-x:auto;white-space:pre;color:var(--ink2)}
-footer{font-size:12px;color:var(--ink2);text-align:center;margin-top:22px}
-.badge{display:inline-block;font-size:11px;font-weight:600;padding:3px 8px;border-radius:12px;background:var(--greenS);color:var(--green);margin-left:8px;vertical-align:middle}
+label{font-size:12.5px;color:var(--ink2);display:block;margin-bottom:3px}
+textarea,input,select{font:inherit;font-size:15px;width:100%;padding:9px 10px;border:1px solid var(--line);
+  border-radius:6px;background:var(--panel);color:var(--ink)}
+
+.chips{padding:0 18px}
+.chip{display:inline-block;font-size:12.5px;font-weight:500;padding:7px 12px;border:1.5px solid var(--marigold);
+  color:var(--marigoldDark);border-radius:16px;margin:0 7px 8px 0;cursor:pointer;background:transparent}
+.chip:hover{background:var(--marigoldS)}
+
+.ledgerbox{padding:14px 18px}
+.fmt{background:
+    repeating-linear-gradient(var(--panel2) 0 27px, var(--line2) 27px 28px);
+  border:1px solid var(--line);border-radius:6px;padding:11px 12px;font-family:ui-monospace,"SF Mono",Consolas,monospace;
+  font-size:11.5px;margin-bottom:9px;overflow-x:auto;white-space:pre;color:var(--ink2);line-height:28px}
+.reg{font-family:ui-monospace,"SF Mono",Consolas,monospace;font-size:13px;min-height:120px;resize:vertical;
+  background:
+    repeating-linear-gradient(var(--panel) 0 27px, var(--line2) 27px 28px);
+  line-height:28px;padding-top:2px}
+
+footer{font-size:12px;color:var(--ink2);text-align:center;margin:26px 18px 0;padding-top:14px;
+  border-top:1px solid var(--line);max-width:52ch;margin-left:auto;margin-right:auto}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
 <div class="wrap">
-<header>
-  <div>
-    <h1 id="appName">Dawa Sahayak<span class="badge" id="badgeFree"></span></h1>
-    <div class="sub" id="tagline"></div>
+<header class="masthead">
+  <div class="mrow">
+    <div class="brand">
+      <svg viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="17" cy="17" r="15.5" stroke="var(--marigold)" stroke-width="1.4"/>
+        <path d="M17 8c5 4.5 5 13 0 18-5-5-5-13.5 0-18z" stroke="var(--brandInk)" stroke-width="1.4" stroke-linejoin="round"/>
+        <path d="M17 12.5v13" stroke="var(--brandInk)" stroke-width="1.2"/>
+      </svg>
+      <div>
+        <h1 id="appName">Dawa <em>Sahayak</em><span class="badge" id="badgeFree"></span></h1>
+      </div>
+    </div>
+    <div class="seg" role="group" aria-label="Language">
+      <button data-lang="en" aria-pressed="true">EN</button>
+      <button data-lang="mr" aria-pressed="false">मराठी</button>
+      <button data-lang="hi" aria-pressed="false">हिंदी</button>
+    </div>
   </div>
-  <div class="seg" role="group" aria-label="Language">
-    <button data-lang="en" aria-pressed="true">EN</button>
-    <button data-lang="mr" aria-pressed="false">मराठी</button>
-    <button data-lang="hi" aria-pressed="false">हिंदी</button>
-  </div>
+  <p class="tagline" id="tagline"></p>
 </header>
 
-<div class="card">
-  <h2 id="t_order"></h2>
-  <div class="sub" id="s_order"></div>
-  <div id="orderList"></div>
-  <div class="tot"><span id="t_total"></span><span id="orderTotal"></span></div>
-  <button class="btn wide ghost" id="explainBtn" style="margin-top:12px"></button>
-  <div class="ai" id="explainOut"></div>
-</div>
-
-<div class="card">
-  <h2 id="t_expiry"></h2>
-  <div class="sub" id="s_expiry"></div>
-  <div id="expiryList"></div>
-  <details style="margin-top:10px">
-    <summary id="t_addbatch"></summary>
-    <div class="edit">
-      <div class="full"><label id="l_med"></label><select id="bMed"></select></div>
-      <div><label id="l_qty"></label><input id="bQty" type="number" inputmode="numeric" min="1"></div>
-      <div><label id="l_left"></label><input id="bLeft" type="number" inputmode="numeric" min="0" max="24"></div>
-      <div class="full"><button class="btn wide" id="addBatch"></button></div>
-    </div>
-  </details>
-</div>
-
-<div class="card">
-  <h2 id="t_ask"></h2>
-  <div class="sub" id="s_ask"></div>
-  <div id="chips"></div>
-  <div class="ai" id="askOut"></div>
-</div>
-
-<div class="card">
-  <h2 id="t_import"></h2>
-  <div class="sub" id="s_import"></div>
-  <div class="fmt" id="fmtHelp"></div>
-  <textarea id="raw" style="margin-top:9px"></textarea>
-  <div class="grid3" style="margin-top:9px">
-    <button class="btn wide" id="readBtn" style="grid-column:1/-1"></button>
+<section>
+  <div class="shead"><h2 id="t_order"></h2><div class="sub" id="s_order"></div></div>
+  <div class="ledger">
+    <div class="inner" id="orderList"></div>
+    <div class="totband"><span class="lab" id="t_total"></span><span class="val" id="orderTotal"></span></div>
+    <div class="actions"><button class="btn gold wide" id="explainBtn"></button></div>
+    <div class="callout" id="explainOut"></div>
   </div>
-  <div class="ai" id="importOut"></div>
-  <div style="margin-top:11px"><button class="btn ghost wide" id="resetBtn"></button></div>
-</div>
+</section>
 
-<div class="card">
-  <h2 id="t_shop"></h2>
-  <div class="sub" id="s_shop"></div>
-  <div id="shopList"></div>
-</div>
+<section>
+  <div class="shead"><h2 id="t_expiry"></h2><div class="sub" id="s_expiry"></div></div>
+  <div class="ledger"><div class="inner" id="expiryList"></div>
+    <details style="border-bottom:0">
+      <summary id="t_addbatch"></summary>
+      <div class="edit">
+        <div class="full"><label id="l_med"></label><select id="bMed"></select></div>
+        <div><label id="l_qty"></label><input id="bQty" type="number" inputmode="numeric" min="1"></div>
+        <div><label id="l_left"></label><input id="bLeft" type="number" inputmode="numeric" min="0" max="24"></div>
+        <div class="full"><button class="btn wide" id="addBatch"></button></div>
+      </div>
+    </details>
+  </div>
+</section>
+
+<section>
+  <div class="shead"><h2 id="t_ask"></h2><div class="sub" id="s_ask"></div></div>
+  <div class="chips" id="chips"></div>
+  <div class="callout" id="askOut"></div>
+</section>
+
+<section>
+  <div class="shead"><h2 id="t_import"></h2><div class="sub" id="s_import"></div></div>
+  <div class="ledgerbox">
+    <div class="fmt" id="fmtHelp"></div>
+    <textarea id="raw" class="reg"></textarea>
+    <div style="margin-top:10px"><button class="btn wide" id="readBtn"></button></div>
+    <div class="callout" id="importOut" style="margin:12px 0 0"></div>
+    <div style="margin-top:14px"><button class="btn ghost wide" id="resetBtn"></button></div>
+  </div>
+</section>
+
+<section>
+  <div class="shead"><h2 id="t_shop"></h2><div class="sub" id="s_shop"></div></div>
+  <div class="ledger"><div class="inner" id="shopList"></div></div>
+</section>
 
 <footer id="foot"></footer>
 </div>
@@ -154,14 +247,14 @@ footer{font-size:12px;color:var(--ink2);text-align:center;margin-top:22px}
 const L = {
  en:{
   tag:"Stock and expiry help for a small pharmacy — works offline, no account needed",
-  free:"free · no login",
+  free:"No login needed",
   order:"Order this month", sorder:"Worked out from your last three months of sales, then rounded up to a full pack.",
   total:"Total order value", explain:"Explain this plan to me",
   expiry:"Batches near expiry", sexpiry:"Add any batch with an expiry date coming up. The app checks whether it will sell in time.",
   addbatch:"Add a batch", med:"Medicine", qty:"Units in batch", left:"Months left before expiry", add:"Add",
   ask:"Quick questions", sask:"Tap a question — the answer is worked out from your own numbers above.",
   imp:"Enter your sales register", simp:"Paste your medicines in the format shown below, one per line.",
-  fmt:"Name, pack size, MRP, shelf life (months), stock in hand, sales Jan..Dec\nAmoxicillin 500mg, 50, 9.5, 8, 70, 305,292,441,507,504,388,346,274,280,267,266,256\n\u2014 you can also paste columns copied from Excel (tab-separated), or leave a field blank to use a sensible default.",
+  fmt:"Name, pack size, MRP, shelf life (months), stock in hand, sales Jan..Dec\nAmoxicillin 500mg, 50, 9.5, 8, 70, 305,292,441,507,504,388,346,274,280,267,266,256\n— you can also paste columns copied from Excel (tab-separated), or leave a field blank to use a sensible default.",
   read:"Read this into my shop", reset:"Restore the sample shop",
   shop:"Your medicines", sshop:"Tap any medicine to correct its stock or last month's sales.",
   stock:"Stock in hand", lastm:"Last month's sales", pack:"Pack size", mrp:"MRP",
@@ -171,7 +264,7 @@ const L = {
   none:"Nothing needs ordering right now.", noBatch:"No batches added yet.",
   bad:"Could not find any medicines in that text. Check the format below and try again.",
   imported:"Read {n} medicines into your shop.",
-  foot:"Prototype · Aavishkar Research Convention 2025-26 · sample data is synthetic · runs fully in your browser, nothing is sent anywhere",
+  foot:"A student prototype for the Aavishkar Research Convention 2025-26. The sample data is synthetic, and everything you enter stays on your own device.",
   chips:["Why this order?","Where is the most money tied up?","What should I discount first?","Which medicines are short?"],
   a_why:"The order list is sorted by how soon each medicine will run out. {top} has the least cover, about {cov} months, so it is ordered first at {qty} units ({val}). Anything with more than 2.5 months of cover is skipped this cycle to save cash for what is closer to running out.",
   a_why_none:"Nothing needs ordering this month — every medicine has enough cover for now.",
@@ -179,19 +272,18 @@ const L = {
   a_disc:"{top} should be discounted first: {qty} more units than will sell before its {left}-month expiry, so a {rate}% markdown is suggested on those units, worth about {val} if lost outright.",
   a_disc_none:"No batch is flagged for a discount right now — add one under \u201cBatches near expiry\u201d to check it.",
   a_short:"{list} are ordered as urgent \u2014 under 0.4 months of cover, meaning stock could run out before the next delivery.",
-  a_short_none:"No medicine is critically short right now.",
-  foot2:"Answers are calculated directly from the numbers above \u2014 no AI is used in this version, so it works on any device without an account."
+  a_short_none:"No medicine is critically short right now."
  },
  mr:{
   tag:"छोट्या मेडिकलसाठी स्टॉक आणि एक्सपायरी मदत — इंटरनेटशिवायही चालते, लॉगिन लागत नाही",
-  free:"मोफत · लॉगिन नाही",
+  free:"लॉगिन आवश्यक नाही",
   order:"या महिन्याची ऑर्डर", sorder:"मागील तीन महिन्यांच्या विक्रीवरून काढलेली, पूर्ण पॅकपर्यंत गोल केलेली.",
   total:"एकूण ऑर्डर रक्कम", explain:"हे मला समजावून सांगा",
   expiry:"एक्सपायरी जवळ असलेले बॅच", sexpiry:"एक्सपायरी जवळ असलेला बॅच इथे टाका. वेळेत विकला जाईल का ते तपासले जाईल.",
   addbatch:"बॅच टाका", med:"औषध", qty:"बॅचमधील नग", left:"एक्सपायरीला किती महिने", add:"जोडा",
   ask:"पटकन प्रश्न", sask:"प्रश्नावर टॅप करा — उत्तर वरील तुमच्याच आकड्यांवरून काढले जाते.",
   imp:"तुमची विक्री नोंद टाका", simp:"खालील नमुन्याप्रमाणे, एका ओळीत एक औषध याप्रमाणे टाका.",
-  fmt:"नाव, पॅक साइज, एमआरपी, शेल्फ लाइफ (महिने), सध्याचा स्टॉक, विक्री जाने..डिसें\nAmoxicillin 500mg, 50, 9.5, 8, 70, 305,292,441,507,504,388,346,274,280,267,266,256\n\u2014 एक्सेलमधून कॉपी केलेले कॉलम्सही चालतील (टॅबने वेगळे केलेले), किंवा एखादे घर रिकामे ठेवल्यास योग्य डिफॉल्ट वापरले जाईल.",
+  fmt:"नाव, पॅक साइज, एमआरपी, शेल्फ लाइफ (महिने), सध्याचा स्टॉक, विक्री जाने..डिसें\nAmoxicillin 500mg, 50, 9.5, 8, 70, 305,292,441,507,504,388,346,274,280,267,266,256\n— एक्सेलमधून कॉपी केलेले कॉलम्सही चालतील (टॅबने वेगळे केलेले), किंवा एखादे घर रिकामे ठेवल्यास योग्य डिफॉल्ट वापरले जाईल.",
   read:"हे माझ्या दुकानात वाचा", reset:"नमुना दुकान परत आणा",
   shop:"तुमची औषधे", sshop:"स्टॉक किंवा मागील महिन्याची विक्री दुरुस्त करण्यासाठी औषधावर टॅप करा.",
   stock:"सध्याचा स्टॉक", lastm:"मागील महिन्याची विक्री", pack:"पॅक साइज", mrp:"एमआरपी",
@@ -201,7 +293,7 @@ const L = {
   none:"आत्ता काहीही ऑर्डर करण्याची गरज नाही.", noBatch:"अजून कोणताही बॅच टाकलेला नाही.",
   bad:"त्या मजकुरात कोणतेही औषध सापडले नाही. खालील नमुना पाहून पुन्हा प्रयत्न करा.",
   imported:"{n} औषधे वाचून दुकानात टाकली.",
-  foot:"प्रोटोटाइप · आविष्कार संशोधन स्पर्धा २०२५-२६ · नमुना आकडेवारी काल्पनिक आहे · हे पूर्णपणे तुमच्या ब्राउझरमध्ये चालते, काहीही कुठेही पाठवले जात नाही",
+  foot:"आविष्कार संशोधन स्पर्धा २०२५-२६ साठी विद्यार्थ्यांनी बनवलेला प्रोटोटाइप. नमुना आकडेवारी काल्पनिक आहे आणि तुम्ही टाकलेली माहिती फक्त तुमच्याच डिव्हाइसवर राहते.",
   chips:["ही ऑर्डर का?","सर्वात जास्त पैसे कशात अडकले?","आधी कशावर सवलत द्यावी?","कोणती औषधे कमी आहेत?"],
   a_why:"साठा किती लवकर संपेल यानुसार यादी लावली आहे. {top} कडे सर्वात कमी साठा आहे, सुमारे {cov} महिन्यांचा, म्हणून तो आधी {qty} नगांना ({val}) मागवला आहे. 2.5 महिन्यांपेक्षा जास्त साठा असलेले या फेरीत वगळले आहेत, जेणेकरून पैसे लवकर संपणाऱ्या औषधांसाठी राहतील.",
   a_why_none:"या महिन्यात काहीही ऑर्डर करण्याची गरज नाही — सर्व औषधांचा साठा पुरेसा आहे.",
@@ -209,19 +301,18 @@ const L = {
   a_disc:"{top} वर आधी सवलत द्यावी: त्याच्या {left}-महिन्यांच्या एक्सपायरीपूर्वी विकल्या जाणाऱ्यापेक्षा {qty} नग जास्त आहेत, म्हणून त्या नगांवर {rate}% सवलतीची शिफारस आहे, जे न विकल्यास सुमारे {val} चे नुकसान होईल.",
   a_disc_none:"आत्ता कोणताही बॅच सवलतीसाठी दाखवलेला नाही — तपासण्यासाठी \u201cएक्सपायरी जवळ असलेले बॅच\u201d खाली एक टाका.",
   a_short:"{list} तातडीने मागवावे लागतील — 0.4 महिन्यांपेक्षा कमी साठा आहे, म्हणजे पुढील डिलिव्हरीआधी संपू शकतो.",
-  a_short_none:"आत्ता कोणतेही औषध गंभीरपणे कमी नाही.",
-  foot2:"उत्तरे वरील आकड्यांवरून थेट काढली जातात — या आवृत्तीत AI वापरलेले नाही, त्यामुळे हे कोणत्याही डिव्हाइसवर खात्याशिवाय चालते."
+  a_short_none:"आत्ता कोणतेही औषध गंभीरपणे कमी नाही."
  },
  hi:{
   tag:"छोटे मेडिकल स्टोर के लिए स्टॉक और एक्सपायरी सहायता — बिना इंटरनेट भी चलती है, लॉगिन ज़रूरी नहीं",
-  free:"मुफ़्त · लॉगिन नहीं",
+  free:"लॉगिन की ज़रूरत नहीं",
   order:"इस महीने का ऑर्डर", sorder:"पिछले तीन महीनों की बिक्री से निकाला गया, पूरे पैक तक गोल किया हुआ.",
   total:"कुल ऑर्डर रकम", explain:"यह मुझे समझाइए",
   expiry:"एक्सपायरी के पास वाले बैच", sexpiry:"जिस बैच की एक्सपायरी पास है उसे यहाँ डालें. समय पर बिकेगा या नहीं, जाँच होगी.",
   addbatch:"बैच जोड़ें", med:"दवा", qty:"बैच में नग", left:"एक्सपायरी में कितने महीने", add:"जोड़ें",
   ask:"जल्दी सवाल", sask:"किसी सवाल पर टैप करें — जवाब ऊपर के आपके अपने आँकड़ों से निकाला जाता है.",
   imp:"अपनी बिक्री की नोंद डालें", simp:"नीचे दिए गए नमूने के अनुसार, हर लाइन में एक दवा डालें.",
-  fmt:"नाम, पैक साइज़, एमआरपी, शेल्फ लाइफ (महीने), मौजूदा स्टॉक, बिक्री जन..दिस\nAmoxicillin 500mg, 50, 9.5, 8, 70, 305,292,441,507,504,388,346,274,280,267,266,256\n\u2014 एक्सेल से कॉपी किए कॉलम भी चलेंगे (टैब से अलग किए हुए), या कोई कॉलम खाली छोड़ने पर उचित डिफ़ॉल्ट इस्तेमाल होगा.",
+  fmt:"नाम, पैक साइज़, एमआरपी, शेल्फ लाइफ (महीने), मौजूदा स्टॉक, बिक्री जन..दिस\nAmoxicillin 500mg, 50, 9.5, 8, 70, 305,292,441,507,504,388,346,274,280,267,266,256\n— एक्सेल से कॉपी किए कॉलम भी चलेंगे (टैब से अलग किए हुए), या कोई कॉलम खाली छोड़ने पर उचित डिफ़ॉल्ट इस्तेमाल होगा.",
   read:"इसे मेरी दुकान में पढ़ें", reset:"नमूना दुकान वापस लाएँ",
   shop:"आपकी दवाइयाँ", sshop:"स्टॉक या पिछले महीने की बिक्री ठीक करने के लिए दवा पर टैप करें.",
   stock:"मौजूदा स्टॉक", lastm:"पिछले महीने की बिक्री", pack:"पैक साइज़", mrp:"एमआरपी",
@@ -231,7 +322,7 @@ const L = {
   none:"अभी कुछ ऑर्डर करने की ज़रूरत नहीं.", noBatch:"अभी कोई बैच नहीं जोड़ा गया.",
   bad:"उस टेक्स्ट में कोई दवा नहीं मिली. नीचे दिया गया नमूना देखकर फिर कोशिश करें.",
   imported:"{n} दवाइयाँ पढ़कर दुकान में डाल दीं.",
-  foot:"प्रोटोटाइप · आविष्कार अनुसंधान स्पर्धा 2025-26 · नमूना आँकड़े काल्पनिक हैं · यह पूरी तरह आपके ब्राउज़र में चलता है, कहीं कुछ नहीं भेजा जाता",
+  foot:"आविष्कार अनुसंधान स्पर्धा 2025-26 के लिए छात्रों द्वारा बनाया गया प्रोटोटाइप. नमूना आँकड़े काल्पनिक हैं और आपकी डाली गई जानकारी केवल आपके डिवाइस पर रहती है.",
   chips:["यह ऑर्डर क्यों?","सबसे ज़्यादा पैसा कहाँ फँसा है?","पहले किस पर छूट दूँ?","कौन सी दवाएँ कम हैं?"],
   a_why:"सूची इस हिसाब से लगाई गई है कि कौन सी दवा सबसे जल्दी खत्म होगी. {top} के पास सबसे कम स्टॉक है, लगभग {cov} महीने का, इसलिए इसे पहले {qty} नग ({val}) का ऑर्डर दिया गया है. 2.5 महीने से ज़्यादा स्टॉक वालों को इस चक्र में छोड़ दिया गया है ताकि पैसा जल्दी खत्म होने वाली दवाओं के लिए बचे.",
   a_why_none:"इस महीने कुछ ऑर्डर करने की ज़रूरत नहीं — सभी दवाओं का स्टॉक पर्याप्त है.",
@@ -239,8 +330,7 @@ const L = {
   a_disc:"{top} पर पहले छूट देनी चाहिए: इसकी {left}-महीने की एक्सपायरी से पहले बिकने वाली मात्रा से {qty} नग ज़्यादा हैं, इसलिए उन नगों पर {rate}% छूट की सलाह है, जो न बिकने पर लगभग {val} का नुकसान होगा.",
   a_disc_none:"अभी किसी बैच पर छूट का सुझाव नहीं है — जाँचने के लिए \u201cएक्सपायरी के पास वाले बैच\u201d में एक जोड़ें.",
   a_short:"{list} को तुरंत मंगाना होगा — 0.4 महीने से कम स्टॉक है, यानी अगली डिलीवरी से पहले खत्म हो सकता है.",
-  a_short_none:"अभी कोई दवा गंभीर रूप से कम नहीं है.",
-  foot2:"जवाब ऊपर के आँकड़ों से सीधे निकाले जाते हैं — इस संस्करण में AI इस्तेमाल नहीं है, इसलिए यह बिना खाते के किसी भी डिवाइस पर चलता है."
+  a_short_none:"अभी कोई दवा गंभीर रूप से कम नहीं है."
  }
 };
 const LNAME = {en:"English", mr:"Marathi (मराठी)", hi:"Hindi (हिंदी)"};
@@ -338,7 +428,7 @@ function render(){
   const P = plan().sort((a,b)=>a.cover - b.cover);
   const need = P.filter(p=>p.order > 0);
   $("orderList").innerHTML = need.length ? need.map(p=>`
-    <div class="row"><div>
+    <div class="row st-${p.state}"><div>
       <div class="nm">${esc(p.m.name)}</div>
       <div class="meta"><span class="pill ${p.state}">${T(p.state)}</span>${p.m.stock} ${T("units")} · ${p.cover.toFixed(1)} ${T("cover")}</div>
     </div><div class="qty">${p.order}<small>${rs(p.value)}</small></div></div>`).join("")
@@ -347,13 +437,17 @@ function render(){
 
   const E = expiryPlan().sort((a,b)=>a.b.left - b.b.left);
   $("expiryList").innerHTML = E.length ? E.map((e,i)=>`
-    <div class="row"><div>
-      <div class="nm">${esc(e.b.med)}</div>
-      <div class="meta">${e.b.qty} ${T("units")} · ${e.b.left} ${T("left").toLowerCase()} · ${fill(T("sells"),{n:e.will})}</div>
-      <div class="meta">${e.surplus > 0
-        ? `<span class="pill disc">${T("disc")}</span>${fill(T("markdown"),{p:Math.round(e.rate*100), n:e.surplus})} · ${rs(e.atRisk)}`
-        : T("safe")}</div>
-    </div><div class="qty">${e.surplus > 0 ? Math.round(e.rate*100)+"%" : "\u2014"}<small><button class="btn ghost" style="padding:2px 8px;min-height:0;font-size:12px" data-rm="${i}">\u00d7</button></small></div></div>`).join("")
+    <div class="exprow ${e.surplus>0?'warn':''}">
+      <div class="expmark">${e.b.left}mo</div>
+      <div>
+        <div class="nm">${esc(e.b.med)}</div>
+        <div class="meta">${e.b.qty} ${T("units")} · ${fill(T("sells"),{n:e.will})}</div>
+        <div class="meta">${e.surplus > 0
+          ? `<span class="pill disc">${T("disc")}</span>${fill(T("markdown"),{p:Math.round(e.rate*100), n:e.surplus})} · ${rs(e.atRisk)}`
+          : T("safe")}</div>
+      </div>
+      <button class="rmx" data-rm="${i}" aria-label="remove">×</button>
+    </div>`).join("")
     : `<p class="muted">${T("noBatch")}</p>`;
   $("expiryList").querySelectorAll("[data-rm]").forEach(btn=>btn.onclick=()=>{
     const e = E[+btn.dataset.rm];
@@ -361,15 +455,17 @@ function render(){
   });
   $("bMed").innerHTML = meds.map(m=>`<option>${esc(m.name)}</option>`).join("");
 
-  $("shopList").innerHTML = meds.map((m,i)=>`
-    <details><summary style="padding:9px 0;font-weight:600;color:var(--ink)">${esc(m.name)}
-      <span class="meta" style="font-weight:400"> — ${m.stock} ${T("units")}</span></summary>
+  $("shopList").innerHTML = meds.map((m,i)=>{
+    const st = P.find(p=>p.m===m);
+    return `<details><summary><span class="dot ${st.state}"></span>${esc(m.name)}
+      <span class="meta2">${m.stock} ${T("units")}</span></summary>
       <div class="edit">
         <div><label>${T("stock")}</label><input type="number" data-f="stock" data-i="${i}" value="${m.stock}"></div>
         <div><label>${T("lastm")}</label><input type="number" data-f="last" data-i="${i}" value="${m.sales[m.sales.length-1]}"></div>
         <div><label>${T("pack")}</label><input type="number" data-f="pack" data-i="${i}" value="${m.pack}"></div>
         <div><label>${T("mrp")}</label><input type="number" step="0.1" data-f="mrp" data-i="${i}" value="${m.mrp}"></div>
-      </div></details>`).join("");
+      </div></details>`;
+  }).join("");
   $("shopList").querySelectorAll("input[data-f]").forEach(inp=>{
     inp.onchange = () => {
       const m = meds[+inp.dataset.i], v = Number(inp.value);
@@ -395,7 +491,7 @@ function explain(){
 function answer(i){
   const out = $("askOut");
   const P = plan();
-  if(i === 0){ explain(); return; }
+  if(i === 0){ explain.call(null); const e = $("explainOut").textContent; out.textContent = e; return; }
   if(i === 1){
     const top = [...P].sort((a,b)=>b.stockValue - a.stockValue)[0];
     out.textContent = fill(T("a_money"), {top: top.m.name, units: top.m.stock, val: rs(top.stockValue)});
@@ -416,15 +512,11 @@ function answer(i){
 }
 
 /* ---------------------------------------------------------- text importer */
-// Accepts lines separated by commas, semicolons, pipes, or tabs (e.g. pasted from Excel).
-// Expected order per line: name, pack, mrp, shelf, stock, then up to 12 monthly sales figures
-// (sales can also be one comma-separated group as the 6th field). Header rows and blank
-// lines are skipped. Missing numeric fields fall back to sensible defaults.
 function parseRegister(text){
   const lines = text.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
   const rows = [];
   for(const line of lines){
-    if(/^(name|medicine|\u0928\u093e\u0935|\u0914\u0937\u0927)\b/i.test(line)) continue; // header row
+    if(/^(name|medicine|\u0928\u093e\u0935|\u0914\u0937\u0927)\b/i.test(line)) continue;
     let parts = line.includes("\t") ? line.split("\t") : line.split(/[,;|]/);
     parts = parts.map(p=>p.trim()).filter((p,idx)=> idx===0 ? true : p!=="" || true);
     if(!parts.length || !parts[0]) continue;
@@ -439,7 +531,7 @@ function parseRegister(text){
     } else if(nums.length === 4){
       [pack, mrp, shelf, stock] = nums; sales = [];
     } else {
-      sales = nums; // just a run of monthly figures after the name
+      sales = nums;
     }
     if(!sales.length) continue;
     rows.push({
